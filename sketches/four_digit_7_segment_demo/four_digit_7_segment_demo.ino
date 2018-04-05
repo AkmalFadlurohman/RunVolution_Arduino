@@ -1,15 +1,6 @@
 #include <Event.h>
 #include <Timer.h>
 
-/*  ___   ___  ___  _   _  ___   ___   ____ ___  ____  
- * / _ \ /___)/ _ \| | | |/ _ \ / _ \ / ___) _ \|    \ 
- *| |_| |___ | |_| | |_| | |_| | |_| ( (__| |_| | | | |
- * \___/(___/ \___/ \__  |\___/ \___(_)____)___/|_|_|_|
- *                  (____/ 
- * Interfacing Arduino to 4 Digit 7 Segment Display using Shift Register 74HC595
- * Tutorial URL http://osoyoo.com/2017/08/08/arduino-lesson-4-digit-7-segment-led-display/
- * CopyRight www.osoyoo.com
- */
 Timer t; // craete a timer object
 long number = 0; //declear the variables
 int first_digit = 0;

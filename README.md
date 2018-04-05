@@ -10,7 +10,7 @@
 8. Brigthness setting (?)
 
 ## Integration Testing
-1. Sensors Test
+1. ~~Sensors Test~~
 2. Displaying Sensor Output
 3. Downloading Data from Android Device
 4. Brightness Setting Test
