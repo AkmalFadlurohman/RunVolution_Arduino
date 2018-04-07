@@ -3,8 +3,8 @@
 1. ~~Bluetooth component~~
 2. ~~Heartbeat sensor~~
 3. ~~Temperature sensor~~
-4. Buzzer
-5. On/Off button
+4. ~~Buzzer~~
+5. ~~On/Off button~~
 6. ~~LCD Display~~
 7. ~~LED 7 Segment Display~~
 8. Brigthness setting (?)
