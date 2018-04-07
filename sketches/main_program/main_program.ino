@@ -2,6 +2,24 @@
 #include <DallasTemperature.h>
 #include <Event.h>
 #include <Timer.h>
+#include <Wire.h>
+#include <LCD.h>
+#include <LiquidCrystal_I2C.h>
+
+// LCD Variables
+#define I2C_ADDR    0x27  // Define I2C Address where the PCF8574A is
+#define BACKLIGHT_PIN     3
+#define En_pin  2
+#define Rw_pin  1
+#define Rs_pin  0
+#define D4_pin  4
+#define D5_pin  5
+#define D6_pin  6
+#define D7_pin  7
+LiquidCrystal_I2C  lcd(I2C_ADDR,En_pin,Rw_pin,Rs_pin,D4_pin,D5_pin,D6_pin,D7_pin);
+
+void lcdSetup();
+void lcdLoop();
 
 // BUTTON Variables
 #define buttonPin A1
@@ -64,6 +82,10 @@ void heartbeatLoop();
 void setup() {
   Serial.begin(9600);
 
+  // LCD Setup
+  lcdSetup();
+  t.every(5000, lcdMainScreen);
+
   // SEVENSEGMENT Setup
   sevSegSetup();
   //t.every(1, display_number);
@@ -86,6 +108,48 @@ void loop() {
   t.update();
 }
 
+// LCD Methods
+void lcdSetup() {
+  lcd.begin (16,2);
+  
+// Switch on the backlight
+  lcd.setBacklightPin(BACKLIGHT_PIN,POSITIVE);
+  lcd.setBacklight(HIGH);
+  lcd.home ();                   // go home
+
+  lcdSplashScreen();
+}
+
+void lcdLoop() {
+  
+}
+
+void lcdSplashScreen() {
+  lcd.home();
+  lcd.print("RunVolution");
+  lcd.setCursor(0, 1);
+  lcd.print("Run for your pet!");
+  t.after(2000, lcdMainScreen);
+}
+
+void lcdMainScreen() {
+  lcd.clear();
+  lcd.home();
+  lcd.print("Hrtrate: ");
+  lcd.print(heartRateBPM);
+  lcd.print(" bpm");
+  lcd.setCursor(0, 1);
+  lcd.print("Distance: ");
+}
+
+void lcdOn() {
+  lcd.setBacklight(HIGH);
+}
+
+void lcdOff() {
+  lcd.setBacklight(LOW);
+}
+
 // BUTTON Methods
 void buttonSetup() {
   pinMode(buttonPin, INPUT);
@@ -102,8 +166,10 @@ void buttonLoop() {
 
   if (ledState == ON) {
     display_number();
+    t.every(100, lcdOn, 1);
   } else {
     cathode_high();
+    t.every(100, lcdOff, 1);
   }
   
 }
