@@ -3,9 +3,19 @@
 #include <Event.h>
 #include <Timer.h>
 
+// BUTTON Variables
+#define buttonPin A1
+#define OFF 0
+#define ON 1
+int buttonState = 0;         // variable for reading the pushbutton status
+int ledState = OFF;
+int ledBefore = OFF;
+
+void buttonSetup();
+void buttonLoop();
+
 // SEVENSEGMENT Variables
 Timer t; // craete a timer object
-Timer t2;
 long number = 0; //declear the variables
 int first_digit = 0;
 int second_digit = 0;
@@ -37,6 +47,7 @@ DallasTemperature sensors(&tempSensor);
 float tempC;
 
 void tempSetup();
+void tempLoop();
 
 // HEARTBEAT Variables
 #define HBDEBUG(i)
@@ -55,7 +66,7 @@ void setup() {
 
   // SEVENSEGMENT Setup
   sevSegSetup();
-  t.every(1, display_number);
+  //t.every(1, display_number);
   
   // TEMPERATURE Setup
   tempSetup();
@@ -64,11 +75,37 @@ void setup() {
   // HEARTBEAT Setup
   heartbeatSetup();
   t.every(delayMsec, heartbeatLoop);
+
+  // BUTTON Setup
+  buttonSetup();
+  t.every(1, buttonLoop);
   
 }
 
 void loop() {
   t.update();
+}
+
+// BUTTON Methods
+void buttonSetup() {
+  pinMode(buttonPin, INPUT);
+}
+
+void buttonLoop() {
+  buttonState = digitalRead(buttonPin);
+
+  if (buttonState == HIGH) {
+    ledBefore = ledState;
+  } else {
+    ledState = !ledBefore;
+  }
+
+  if (ledState == ON) {
+    display_number();
+  } else {
+    cathode_high();
+  }
+  
 }
 
 // SEVENSEGMENT Methods
@@ -103,6 +140,8 @@ void sevSegLoop() {
 void break_number(float num) { // seperate the input number into 4 single digits
   if (num > 99.99) {
     num = 99.99;
+  } else if (num < 0) {
+    num = 0;
   } else {
     num = (int) (num * 100);
   }
