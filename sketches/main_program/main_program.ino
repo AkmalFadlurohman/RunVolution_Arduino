@@ -6,6 +6,18 @@
 #include <LCD.h>
 #include <LiquidCrystal_I2C.h>
 
+// BUZZER Variables
+#define buzzPin 3
+int b;
+int maxHRate = 160;
+int dangerousHRate = 200;
+
+// BRIGHTNESS Variables
+#define potPin A2
+int brightness;
+
+int getBrightness();
+
 // LCD Variables
 #define I2C_ADDR    0x27  // Define I2C Address where the PCF8574A is
 #define BACKLIGHT_PIN     3
@@ -73,18 +85,27 @@ int ledPin = 13;
 int analogPin = 0;
 int beatMsec = 0;
 int heartRateBPM = 0;
-const int delayMsec = 60;
+const int delayMsec = 50;
 
 bool heartbeatDetected(int IRSensorPin, int delay);
 void heartbeatSetup();
 void heartbeatLoop();
 
+void debugPrint(){
+  Serial.println(brightness);
+  Serial.println(getBrightness());
+}
+
 void setup() {
   Serial.begin(9600);
 
+  // BUZZER Setup
+  pinMode(buzzPin, OUTPUT);
+  t.every(20, buzz);
+
   // LCD Setup
   lcdSetup();
-  t.every(5000, lcdMainScreen);
+  t.every(2000, lcdMainScreen);
 
   // SEVENSEGMENT Setup
   sevSegSetup();
@@ -101,11 +122,34 @@ void setup() {
   // BUTTON Setup
   buttonSetup();
   t.every(1, buttonLoop);
+
+  // DEBUG
+  //t.every(500, debugPrint);
   
 }
 
 void loop() {
   t.update();
+}
+
+// BUZZER Methods
+void buzz() {
+  if (heartRateBPM > dangerousHRate) {
+    heartRateBPM = dangerousHRate;
+  } 
+
+  if (heartRateBPM >= maxHRate) {
+    b = map(heartRateBPM, 0, dangerousHRate, 0, 255);
+    analogWrite(buzzPin, b);
+  } else {
+    analogWrite(buzzPin, 0);
+  }
+}
+
+// BRIGHTNESS Methods
+int getBrightness() {
+  brightness = analogRead(potPin);
+  return map(brightness, 0, 1023, 0, 255);
 }
 
 // LCD Methods
