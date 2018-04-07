@@ -5,6 +5,14 @@
 #include <Wire.h>
 #include <LCD.h>
 #include <LiquidCrystal_I2C.h>
+#include <SoftwareSerial.h>
+
+// BLUETOOTH Variables
+SoftwareSerial bluetooth(7, 8); // RX, TX
+String dataString;
+
+void bluetoothSetup();
+void bluetoothLoop();
 
 // BUZZER Variables
 #define buzzPin 3
@@ -29,6 +37,7 @@ int getBrightness();
 #define D6_pin  6
 #define D7_pin  7
 LiquidCrystal_I2C  lcd(I2C_ADDR,En_pin,Rw_pin,Rs_pin,D4_pin,D5_pin,D6_pin,D7_pin);
+String distance = "";
 
 void lcdSetup();
 void lcdLoop();
@@ -99,6 +108,10 @@ void debugPrint(){
 void setup() {
   Serial.begin(9600);
 
+  // BLUETOOTH Setup
+  bluetoothSetup();
+  t.every(100, bluetoothLoop);
+
   // BUZZER Setup
   pinMode(buzzPin, OUTPUT);
   t.every(20, buzz);
@@ -130,6 +143,19 @@ void setup() {
 
 void loop() {
   t.update();
+}
+
+// BLUETOOTH Methods
+void bluetoothSetup() {
+  bluetooth.begin(9600);
+}
+
+void bluetoothLoop() {
+  if (bluetooth.available()) {
+    dataString = bluetooth.readString();
+    distance = dataString;
+    distance.remove(distance.length()-2);
+  }
 }
 
 // BUZZER Methods
@@ -184,6 +210,8 @@ void lcdMainScreen() {
   lcd.print(" bpm");
   lcd.setCursor(0, 1);
   lcd.print("Distance: ");
+  lcd.print(distance);
+  lcd.print(" m");
 }
 
 void lcdOn() {

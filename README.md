@@ -12,8 +12,8 @@
 ## Integration Testing
 1. ~~Sensors Test~~
 2. ~~Displaying Sensor Output~~
-3. Downloading Data from Android Device
-4. Brightness Setting Test
+3. ~~Downloading Data from Android Device~~
+4. ~~Brightness Setting Test~~
 5. Complete Device Testing
 
 ## Others
