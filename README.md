@@ -7,7 +7,7 @@
 5. ~~On/Off button~~
 6. ~~LCD Display~~
 7. ~~LED 7 Segment Display~~
-8. Brigthness setting (?)
+8. ~~Brigthness setting~~
 
 ## Integration Testing
 1. ~~Sensors Test~~
