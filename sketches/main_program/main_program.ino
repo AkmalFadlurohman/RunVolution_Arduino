@@ -25,7 +25,7 @@ void lcdLoop();
 #define buttonPin A1
 #define OFF 0
 #define ON 1
-int buttonState = 0;         // variable for reading the pushbutton status
+int buttonState = 0;
 int ledState = OFF;
 int ledBefore = OFF;
 
@@ -33,8 +33,8 @@ void buttonSetup();
 void buttonLoop();
 
 // SEVENSEGMENT Variables
-Timer t; // craete a timer object
-long number = 0; //declear the variables
+Timer t; 
+long number = 0;
 int first_digit = 0;
 int second_digit = 0;
 int third_digit = 0;
@@ -73,7 +73,7 @@ int ledPin = 13;
 int analogPin = 0;
 int beatMsec = 0;
 int heartRateBPM = 0;
-const int delayMsec = 60; // 100msec per sample
+const int delayMsec = 60;
 
 bool heartbeatDetected(int IRSensorPin, int delay);
 void heartbeatSetup();
@@ -184,23 +184,6 @@ void sevSegSetup() {
   pinMode(latch, OUTPUT);
   pinMode(data, OUTPUT);
   cathode_high();
-}
-
-void sevSegLoop() {
-  t.update(); //timer update
-  if (Serial.available()) { // read from serial
-    t.stop(timer_event); //stop timer if anythign to read
-    cathode_high(); // blank the screen
-    String s = Serial.readString(); //read the serail value
-    number = (long)s.toInt(); //convert it to int
-    if (number > 9999) { //check the number is 0-9999
-      Serial.println("Please Enter Number Between 0 - 9999");
-    } else {
-      break_number(number);
-      timer_event = t.every(1, display_number); // start timer again
-    }
-
-  }
 }
 
 void break_number(float num) { // seperate the input number into 4 single digits
