@@ -220,7 +220,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public class PetPreferenceFragment extends PreferenceFragment  {
+    public static class PetPreferenceFragment extends PreferenceFragment  {
 
 
         @Override
@@ -261,7 +261,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     int petId = preferences.getInt("petId",0);
                     String newPetName = petNamePref.getSummary().toString();
                     preferences.edit().putString("petName",newPetName).apply();
-                    new PetNameUpdaterTask(petId,newPetName);
+                    PetNameUpdaterTask updater = new PetNameUpdaterTask(petId,newPetName);
+                    updater.execute((Void) null);
                     return true;
                 }
             });
@@ -297,7 +298,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-    public class PetNameUpdaterTask extends AsyncTask<Void, Void, Boolean> {
+    public static class PetNameUpdaterTask extends AsyncTask<Void, Void, Boolean> {
         private final int petID;
         @NonNull
         private final String newName;
@@ -378,7 +379,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder notificationBuilder =
                     new NotificationCompat.Builder(SettingsActivity.getAppContext(), channelId)
-                            .setColor(getResources().getColor(R.color.colorPrimary))
+                            .setColor(SettingsActivity.getAppContext().getResources().getColor(R.color.colorPrimary))
                             .setSmallIcon(R.drawable.ic_stat_notification)
                             .setContentTitle(messageTitle)
                             .setContentText(messageBody)
@@ -386,7 +387,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                             .setDefaults(NotificationCompat.DEFAULT_ALL)
                             .setContentIntent(pendingIntent);
 
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) SettingsActivity.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
             // Since android Oreo notification channel is needed.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
