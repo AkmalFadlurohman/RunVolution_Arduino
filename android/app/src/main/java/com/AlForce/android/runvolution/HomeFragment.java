@@ -1,6 +1,9 @@
 package com.AlForce.android.runvolution;
 
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +45,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -89,6 +93,10 @@ public class HomeFragment extends Fragment {
     private StepDetector mStepDetector;
     private int currentSteps;
     private int cumulativeSteps;
+
+    /* Bluetooth and AArduino Attributes */
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothDevice device;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -225,6 +233,23 @@ public class HomeFragment extends Fragment {
         };
         historyDAO.setListener(updateListener);
 
+    }
+
+    private void initializeBluetooth() {
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this,"This device does not support bluetooth communication",Toast.LENGTH_LONG);
+        }
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 1);
+        }
+        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
+                this.device = device;
+            }
+        }
     }
 
     private void startRecording() {
