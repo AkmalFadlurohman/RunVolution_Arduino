@@ -1,0 +1,131 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/pet_fragment_vertical_margin"
+    tools:context="com.AlForce.android.runvolution.PetStatusFragment">
+
+    <ScrollView
+        android:id="@+id/pet_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp">
+
+        <RelativeLayout
+            android:id="@+id/pet_data_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <RelativeLayout
+                android:id="@+id/view_pet_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20sp" >
+
+                <TextView
+                    android:id="@+id/title_pet_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pet_title_view"
+                    android:fontFamily="monospace"
+                    android:text="Name"
+                    android:padding="1dp"
+                    android:paddingStart="15dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textSize="@dimen/pet_title"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/data_pet_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pet_data_view"
+                    android:layout_below="@id/title_pet_name"
+                    android:layout_alignStart="@id/title_pet_name"
+                    android:layout_marginStart="35dp"
+                    android:fontFamily="monospace"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textSize="@dimen/pet_data"
+                    android:typeface="normal" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/view_pet_level"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view_pet_name"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10sp">
+
+                <TextView
+                    android:id="@+id/title_pet_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pet_title_view"
+                    android:fontFamily="monospace"
+                    android:text="Level"
+                    android:padding="1dp"
+                    android:paddingStart="15dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textSize="@dimen/pet_title"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/data_pet_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pet_data_view"
+                    android:layout_below="@id/title_pet_level"
+                    android:layout_alignStart="@id/title_pet_name"
+                    android:layout_marginStart="35dp"
+                    android:fontFamily="monospace"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textSize="@dimen/pet_data"
+                    android:typeface="normal" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/view_pet_xp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view_pet_level"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10sp">
+
+                <TextView
+                    android:id="@+id/title_pet_xp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pet_title_view"
+                    android:fontFamily="monospace"
+                    android:text="XP"
+                    android:padding="1dp"
+                    android:paddingStart="15dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textSize="@dimen/pet_title"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/data_pet_xp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pet_data_view"
+                    android:layout_below="@id/title_pet_xp"
+                    android:layout_alignStart="@id/title_pet_name"
+                    android:layout_marginStart="35dp"
+                    android:fontFamily="monospace"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textSize="@dimen/pet_data"
+                    android:typeface="normal" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</FrameLayout>
