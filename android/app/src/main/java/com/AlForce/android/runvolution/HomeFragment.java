@@ -238,7 +238,7 @@ public class HomeFragment extends Fragment {
     private void initializeBluetooth() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
-            Toast.makeText(this,"This device does not support bluetooth communication",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),"This device does not support bluetooth communication",Toast.LENGTH_LONG).show();
         }
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
