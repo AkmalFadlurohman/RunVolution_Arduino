@@ -9,3 +9,7 @@ Anggota:
 
 ## Deskripsi Aplikasi
 Sistem Arduino yang dibuat adalah sebuah alat pemantau kondisi pengguna saat ia berolahraga. Sistem arduino dapat mendeteksi detak nadi dan suhu tubuh pengguna. Ketika salah satu dari detak nadi atau suhu tubuh sudah melebihi batas yang disarankan, alat akan mengeluarkan bunyi sebagai sinyal ke pengguna untuk beristirahat. Selain itu sistem arduino dapat menerima data dari aplikasi android mengenai jarak yang telah ditempuh pengguna selama berolahraga. Dengan begitu pengguna tidak perlu membuka ponsel pintarnya untuk memantau kemajuan olahraganya saat itu.
+
+## Proses Instalasi
+
+## Link deliverables
