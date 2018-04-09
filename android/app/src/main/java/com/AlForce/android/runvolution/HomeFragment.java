@@ -238,7 +238,7 @@ public class HomeFragment extends Fragment {
     private void initializeBluetooth() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
-            Toast.makeText(this,"This device does not support bluetooth communication",Toast.LENGTH_LONG);
+            Toast.makeText(this,"This device does not support bluetooth communication",Toast.LENGTH_LONG).show();
         }
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -247,7 +247,9 @@ public class HomeFragment extends Fragment {
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
-                this.device = device;
+                String deviceName = device.getName();
+                String deviceHardwareAddress = device.getAddress();
+                Log.d("Bluetooth test","deviceName : " + deviceName + "deviceHardwareAddress : " + deviceHardwareAddress);
             }
         }
     }

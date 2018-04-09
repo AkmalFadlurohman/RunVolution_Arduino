@@ -3,6 +3,9 @@ package com.AlForce.android.runvolution;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +22,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.RingtonePreference;
@@ -354,9 +358,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success) {
-                Toast.makeText(SettingsActivity.getAppContext(), "Pet Name Updated", Toast.LENGTH_SHORT).show();
+
+                //Toast.makeText(SettingsActivity.getAppContext(), "Pet Name Updated", Toast.LENGTH_SHORT).show();
+                String title = "Pet Name Update";
+                String msg = "Your pet's name has been successfully updated";
+                sendNotification(title,msg);
             } else {
-                Toast.makeText(SettingsActivity.getAppContext(), "Failed to Update Pet Name", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SettingsActivity.getAppContext(), "Failed to Update Pet Name", Toast.LENGTH_SHORT).show();
+                String title = "Pet Name Update";
+                String msg = "Failed to update pet's name";
+                sendNotification(title,msg);
             }
 
         }
@@ -364,6 +375,33 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         @Override
         protected void onCancelled() {
             //updateTask = null;
+        }
+
+        private void sendNotification(String messageTitle, String messageBody) {
+            Intent notificationIntent = new Intent(this, MainActivity.class);
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(SettingsActivity.getAppContext(), 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+
+            String channelId = "my_channel_id_01";
+            Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder =
+                    new NotificationCompat.Builder(this, channelId)
+                            .setColor(getResources().getColor(R.color.colorPrimary))
+                            .setSmallIcon(R.drawable.ic_stat_notification)
+                            .setContentTitle(messageTitle)
+                            .setContentText(messageBody)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setDefaults(NotificationCompat.DEFAULT_ALL)
+                            .setContentIntent(pendingIntent);
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            // Since android Oreo notification channel is needed.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
+                notificationManager.createNotificationChannel(channel);
+            }
+            notificationManager.notify(0, notificationBuilder.build());
         }
     }
 }
