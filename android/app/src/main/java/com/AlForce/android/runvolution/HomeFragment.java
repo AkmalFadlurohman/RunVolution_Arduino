@@ -4,6 +4,7 @@ package com.AlForce.android.runvolution;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,12 +41,16 @@ import com.AlForce.android.runvolution.utils.DatabaseUpdateListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -97,6 +102,7 @@ public class HomeFragment extends Fragment {
     /* Bluetooth and AArduino Attributes */
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice device;
+    private BluetoothThread bluetoothThread;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -249,7 +255,10 @@ public class HomeFragment extends Fragment {
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress();
-                Log.d("Bluetooth test","deviceName : " + deviceName + "deviceHardwareAddress : " + deviceHardwareAddress);
+                //Log.d("Bluetooth test","deviceName : " + deviceName + "deviceHardwareAddress : " + deviceHardwareAddress);
+                if (deviceHardwareAddress.equals("98:D3:34:91:16:A9")) {
+                    this.device = device;
+                }
             }
         }
     }
@@ -271,6 +280,8 @@ public class HomeFragment extends Fragment {
         }
         timer.startTime = System.currentTimeMillis();
         timer.timerHandler.postDelayed(timer.timerRunnable, 0);
+        bluetoothThread = new BluetoothThread(this.device);
+        bluetoothThread.start();
     }
 
     private void stopRecording() {
@@ -283,6 +294,11 @@ public class HomeFragment extends Fragment {
         mSensorManager.unregisterListener(mStepDetector);
 
         timer.timerHandler.removeCallbacks(timer.timerRunnable);
+        try {
+            bluetoothThread.join();
+        } catch (InterruptedException ex) {
+            Log.d(TAG,"Failed to join BT thread");
+        }
         saveCurrentRecord();
     }
 
@@ -413,7 +429,69 @@ public class HomeFragment extends Fragment {
         protected void onCancelled() {
             //Empty
         }
+    }
 
+    private class BluetoothThread extends Thread {
+        private final BluetoothSocket btSocket;
+        private final BluetoothDevice btDevice;
+        private BluetoothDataThread btDataThread;
+        private final UUID btUUID = UUID.fromString("00001101-0000-1000-8000- 00805f9b34fb");
+
+        public BluetoothThread(BluetoothDevice device) {
+            BluetoothSocket tmp = null;
+            btDevice = device;
+            try {
+                tmp = device.createRfcommSocketToServiceRecord(btUUID); } catch (IOException e) { }
+            btSocket = tmp;
+        }
+        public void run() {
+            bluetoothAdapter.cancelDiscovery();
+            try {
+                btSocket.connect();
+            } catch (IOException connectException) {
+                try {
+                    btSocket.close();
+                } catch (IOException closeException) { }
+                return;
+            }
+            btDataThread = new BluetoothDataThread(btSocket);
+            btDataThread.start();
+        }
+        public void cancel() {
+            try {
+                btSocket.close();
+            } catch (IOException e) { }
+        }
+    }
+
+    private class BluetoothDataThread extends Thread {
+        private final BluetoothSocket btSocket;
+        private final OutputStream outputStream;
+
+        public BluetoothDataThread(BluetoothSocket socket) {
+            btSocket = socket;
+            OutputStream tmpOut = null;
+            try {
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) { }
+            outputStream = tmpOut;
+        }
+
+        public void run() {
+            write(formatFloatToString(totalDistance).getBytes());
+        }
+        public void write(byte[] bytes) {
+            try {
+                outputStream.write(bytes);
+            } catch (IOException e) { }
+        }
+
+
+        public void cancel() {
+            try {
+                btSocket.close();
+            } catch (IOException e) { }
+        }
     }
 
 }
