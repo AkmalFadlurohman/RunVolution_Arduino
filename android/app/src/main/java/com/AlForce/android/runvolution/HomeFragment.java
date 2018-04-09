@@ -2,7 +2,6 @@ package com.AlForce.android.runvolution;
 
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
@@ -41,10 +40,8 @@ import com.AlForce.android.runvolution.utils.DatabaseUpdateListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.Socket;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -101,7 +98,7 @@ public class HomeFragment extends Fragment {
 
     /* Bluetooth and AArduino Attributes */
     private BluetoothAdapter bluetoothAdapter;
-    private BluetoothDevice device;
+    private BluetoothDevice bluetoothDevice;
     private BluetoothThread bluetoothThread;
 
     public HomeFragment() {
@@ -244,7 +241,7 @@ public class HomeFragment extends Fragment {
     private void initializeBluetooth() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
-            Toast.makeText(getActivity(),"This device does not support bluetooth communication",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),"This bluetoothDevice does not support bluetooth communication",Toast.LENGTH_LONG).show();
         }
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -257,7 +254,7 @@ public class HomeFragment extends Fragment {
                 String deviceHardwareAddress = device.getAddress();
                 //Log.d("Bluetooth test","deviceName : " + deviceName + "deviceHardwareAddress : " + deviceHardwareAddress);
                 if (deviceHardwareAddress.equals("98:D3:34:91:16:A9")) {
-                    this.device = device;
+                    this.bluetoothDevice = device;
                 }
             }
         }
@@ -280,8 +277,10 @@ public class HomeFragment extends Fragment {
         }
         timer.startTime = System.currentTimeMillis();
         timer.timerHandler.postDelayed(timer.timerRunnable, 0);
-        bluetoothThread = new BluetoothThread(this.device);
-        bluetoothThread.start();
+        if (bluetoothDevice != null) {
+            bluetoothThread = new BluetoothThread(this.bluetoothDevice);
+            bluetoothThread.start();
+        }
     }
 
     private void stopRecording() {
@@ -294,10 +293,12 @@ public class HomeFragment extends Fragment {
         mSensorManager.unregisterListener(mStepDetector);
 
         timer.timerHandler.removeCallbacks(timer.timerRunnable);
-        try {
-            bluetoothThread.join();
-        } catch (InterruptedException ex) {
-            Log.d(TAG,"Failed to join BT thread");
+        if (bluetoothDevice != null) {
+            try {
+                bluetoothThread.join();
+            } catch (InterruptedException ex) {
+                Log.d(TAG,"Failed to join BT thread");
+            }
         }
         saveCurrentRecord();
     }
@@ -435,7 +436,7 @@ public class HomeFragment extends Fragment {
         private final BluetoothSocket btSocket;
         private final BluetoothDevice btDevice;
         private BluetoothDataThread btDataThread;
-        private final UUID btUUID = UUID.fromString("00001101-0000-1000-8000- 00805f9b34fb");
+        private final UUID btUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
         public BluetoothThread(BluetoothDevice device) {
             BluetoothSocket tmp = null;
