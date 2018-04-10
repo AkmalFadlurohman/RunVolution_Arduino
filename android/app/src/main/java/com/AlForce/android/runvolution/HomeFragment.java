@@ -479,7 +479,7 @@ public class HomeFragment extends Fragment {
         }
 
         public void run() {
-            write(formatFloatToString(totalDistance).getBytes());
+            write(formatFloatToString(currentDistance).getBytes());
         }
         public void write(byte[] bytes) {
             try {
