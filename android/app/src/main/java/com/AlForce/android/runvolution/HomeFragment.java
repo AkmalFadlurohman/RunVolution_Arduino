@@ -278,8 +278,11 @@ public class HomeFragment extends Fragment {
         timer.startTime = System.currentTimeMillis();
         timer.timerHandler.postDelayed(timer.timerRunnable, 0);
         if (bluetoothDevice != null) {
+            Toast.makeText(HomeFragment.this.getActivity().getApplicationContext(), "Bluetooth connected", Toast.LENGTH_SHORT).show();
             bluetoothThread = new BluetoothThread(this.bluetoothDevice);
             bluetoothThread.start();
+        } else {
+            Toast.makeText(HomeFragment.this.getActivity().getApplicationContext(), "Bluetooth not connected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -294,11 +297,8 @@ public class HomeFragment extends Fragment {
 
         timer.timerHandler.removeCallbacks(timer.timerRunnable);
         if (bluetoothDevice != null) {
-            try {
-                bluetoothThread.join();
-            } catch (InterruptedException ex) {
-                Log.d(TAG,"Failed to join BT thread");
-            }
+            bluetoothThread.cancel();
+            Toast.makeText(HomeFragment.this.getActivity().getApplicationContext(), "Bluetooth disconnected", Toast.LENGTH_SHORT).show();
         }
         saveCurrentRecord();
     }
@@ -479,7 +479,7 @@ public class HomeFragment extends Fragment {
         }
 
         public void run() {
-            write(formatFloatToString(totalDistance).getBytes());
+            write(formatFloatToString(currentDistance).getBytes());
         }
         public void write(byte[] bytes) {
             try {

@@ -23,5 +23,5 @@ Laporan Milestone 2: [AlForce_K2_LaporanMilestone2](https://docs.google.com/docu
 
 Laporan Milestone 3: [AlForce_K2_LaporanMilestone3](https://docs.google.com/document/d/1oqIZk0zwlun7qme37m05yJCfSNqpbo5fGeo0A4BAHoA/edit#)
 
-Video Demo: [AlForce_K2_DemoVideo](www.youtube.com)
+Video Demo: [AlForce_K2_DemoVideo](https://youtu.be/5c0sSfmuouA)
 
