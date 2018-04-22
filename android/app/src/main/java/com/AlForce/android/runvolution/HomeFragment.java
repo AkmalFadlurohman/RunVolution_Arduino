@@ -468,10 +468,12 @@ public class HomeFragment extends Fragment {
     private class BluetoothDataThread extends Thread {
         private final BluetoothSocket btSocket;
         private final OutputStream outputStream;
+        private boolean braker;
 
         public BluetoothDataThread(BluetoothSocket socket) {
             btSocket = socket;
             OutputStream tmpOut = null;
+            braker = true;
             try {
                 tmpOut = socket.getOutputStream();
             } catch (IOException e) { }
@@ -479,7 +481,9 @@ public class HomeFragment extends Fragment {
         }
 
         public void run() {
-            write(formatFloatToString(currentDistance).getBytes());
+            while (braker) {
+                write(formatFloatToString(currentDistance).getBytes());
+            }
         }
         public void write(byte[] bytes) {
             try {
@@ -489,6 +493,7 @@ public class HomeFragment extends Fragment {
 
 
         public void cancel() {
+            braker = false;
             try {
                 btSocket.close();
             } catch (IOException e) { }
